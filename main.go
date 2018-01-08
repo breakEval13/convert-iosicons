@@ -25,7 +25,7 @@ func main() {
 		cli.Tree(help),
 		cli.Tree(child),
 	).Run(os.Args[1:]); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		// fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
@@ -45,7 +45,7 @@ var root = &cli.Command{
 	Argv: func() interface{} { return new(rootT) },
 	Fn: func(ctx *cli.Context) error {
 		argv := ctx.Argv().(*rootT)
-		ctx.String("Test Path  %s\n", argv.Path)
+		// ctx.String("Test Path  %s\n", argv.Path)
 		start(argv.Path)
 		return nil
 	},
@@ -62,9 +62,9 @@ var child = &cli.Command{
 	Desc: "测试",
 	Argv: func() interface{} { return new(childT) },
 	Fn: func(ctx *cli.Context) error {
-		argv := ctx.Argv().(*childT)
+		// argv := ctx.Argv().(*childT)
 
-		ctx.String("Order Test Path %s\n", argv.Path)
+		// ctx.String("Order Test Path %s\n", argv.Path)
 
 		return nil
 	},
@@ -72,24 +72,24 @@ var child = &cli.Command{
 
 func start(path string) {
 	if path==""{
-		fmt.Println("参数不存在！")
+		fmt.Println("\033[1m usage: \n \t[--path] \n \t\033[0m")
 		return
 	}
 
 	f1, err := os.Open(path)
 	if err != nil {
-		panic(err)
+		fmt.Println("\033[1m 出现异常,请检查文件路径是否正确. \033[0m")
 	}
 	defer f1.Close()
 
 	m1, err := jpeg.Decode(f1)
 	if err != nil {
-		panic(err)
+		fmt.Println("\033[1m 出现异常,请检查文件类型[JPEG,JPG]. \033[0m")
 	}
 	bounds := m1.Bounds()
 
 	if bounds.Dx()>1024 && bounds.Dy()>1024  {
-		fmt.Println("原图大于1024px")
+		fmt.Println("\033[34m 原图大于1024px \033[0m")
 		return
 	}
 	fmt.Println("源图X:",bounds.Dx())
@@ -109,7 +109,7 @@ func start(path string) {
 	SaveImage("@2x.jpg",ImageResize(m1,width2x,height2x))
 	SaveImage("@3x.jpg",ImageResize(m1,width,height))
 
-	fmt.Println("处理好的图片已经保存在当前文件目录下！")
+	fmt.Println("\033[32m 处理好的图片已经保存在当前文件目录下！ \033[0m")
 
 }
 
